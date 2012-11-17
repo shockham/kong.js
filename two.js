@@ -47,6 +47,19 @@ Game.prototype.main = function () {
     then = now;
 }
 
+Game.prototype.touching = function (a, b){
+	if (
+        a.x <= (b.x + b.Width)
+        && b.x <= (a.x + a.Width)
+        && a.y <= (b.y + b.Height)
+        && b.y <= (a.y + a.Height)
+    ) {
+        return true;
+    }else{
+    	return false;
+    }
+}
+
 // Handle keyboard controls
 var keysDown = {};
 

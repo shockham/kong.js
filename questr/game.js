@@ -36,12 +36,7 @@ game.update = function (modifier) {
     }
 
     // Are they touching?
-    if (
-        player.x <= (monster.x + monster.Width)
-        && monster.x <= (player.x + player.Width)
-        && player.y <= (monster.y + monster.Height)
-        && monster.y <= (player.y + player.Height)
-    ) {
+    if (game.touching(player, monster)) {
         ++monstersCaught;
         reset();
     }
