@@ -31,6 +31,5 @@ game.update = function (modifier) {
     }
 };
 
-// Let's play this game!
-var then = Date.now();
-setInterval(function(){ game.main();}, 1); // Execute as fast as possible​​
+var then = Date.now();//so game knows when it og started
+setInterval(function(){ game.main();}, 1); //calls main as fast as it can

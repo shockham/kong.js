@@ -1,4 +1,4 @@
-//entity
+//--Entity--
 //contructor
 var Entity = function(x, y, img, width, height){
 	this.x = x;
@@ -15,8 +15,8 @@ Entity.prototype.draw = function(ctx){
 	if(this.Img.Ready)
 		ctx.drawImage(this.Img, this.x, this.y, this.Width, this.Height);
 }
-
-
+//--Game--
+//contructor
 var Game = function(){
 	//init canvas
 	this.canvas = document.createElement("canvas");
@@ -26,19 +26,19 @@ var Game = function(){
 	document.body.appendChild(this.canvas);	
 	this.Objects = new Array();
 }
-
+//function to add items to game
 Game.prototype.add = function(obj){
 	this.Objects[this.Objects.length] = obj;
 }
-
+//just so there is an update, change in game code
 Game.prototype.update = function(modifier){  }
-
+//handles the drawing of everything added to game
 Game.prototype.draw = function(){
 	for(obj in this.Objects){
 		this.Objects[obj].draw(this.ctx);
 	}
 }
-
+//called as fast as can handles updates
 Game.prototype.main = function () {
     var now = Date.now();
     var delta = now - then;
@@ -46,7 +46,7 @@ Game.prototype.main = function () {
     this.draw();
     then = now;
 }
-
+//function to test if two objects are touching
 Game.prototype.touching = function (a, b){
 	if (
         a.x <= (b.x + b.Width)
