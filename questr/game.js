@@ -4,21 +4,11 @@ var game = new Game();
 //adding objects
 var bg = new Entity(0, 0, "img/bg.png", window.innerWidth, window.innerHeight);
 var player = new Entity(0, 0, "img/player.png", 16, 16);
-var monster = new Entity(0, 0, "img/monster.png", 32, 32);
+var monster = new Entity(32 + (Math.random() * (game.canvas.width - 64)), 32 + (Math.random() * (game.canvas.height - 64)), "img/monster.png", 32, 32);
 
 game.add(bg);
 game.add(player);
 game.add(monster);
-
-var monstersCaught = 0;
-
-
-// Reset the game when the player catches a monster
-var reset = function () {
-    // Throw the monster somewhere on the screen randomly
-    monster.x = 32 + (Math.random() * (game.canvas.width - 64));
-    monster.y = 32 + (Math.random() * (game.canvas.height - 64));
-};
 
 // Update game objects
 game.update = function (modifier) {
@@ -37,12 +27,10 @@ game.update = function (modifier) {
 
     // Are they touching?
     if (game.touching(player, monster)) {
-        ++monstersCaught;
-        reset();
+        game.ctx.fillText("Hey!", 10, 10);
     }
 };
 
 // Let's play this game!
-reset();
 var then = Date.now();
 setInterval(function(){ game.main();}, 1); // Execute as fast as possible​​
