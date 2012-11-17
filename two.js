@@ -25,6 +25,9 @@ var Game = function(){
 	this.canvas.height = window.innerHeight - 5;
 	document.body.appendChild(this.canvas);	
 	this.Objects = new Array();
+	//text formatting stuff
+	this.ctx.font = '40px san-serif';
+    this.ctx.textBaseline = 'top';
 }
 //function to add items to game
 Game.prototype.add = function(obj){
