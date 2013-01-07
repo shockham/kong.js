@@ -26,7 +26,7 @@ var Game = function(){
 	document.body.appendChild(this.canvas);	
 	this.Objects = new Array();
 	//text formatting stuff
-	this.ctx.font = '40px san-serif';
+	this.ctx.font = '40px Monofett';
     this.ctx.textBaseline = 'top';
 }
 //function to add items to game
@@ -45,8 +45,8 @@ Game.prototype.draw = function(){
 Game.prototype.main = function () {
     var now = Date.now();
     var delta = now - then;
-    this.update(delta / 1000);
     this.draw();
+    this.update(delta / 1000);
     then = now;
 }
 //function to test if two objects are touching
