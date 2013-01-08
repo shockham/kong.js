@@ -10,6 +10,8 @@ var Entity = function(x, y, img, width, height){
 	this.Img.onload = function(){ this.Ready = true; }
 	this.Img.src = img;
 }
+//Empty update function to start with
+Entity.prototype.update = function(modifier){}
 //drawing the entity to canvas
 Entity.prototype.draw = function(ctx){
 	if(this.Img.Ready)
@@ -33,8 +35,12 @@ var Game = function(){
 Game.prototype.add = function(obj){
 	this.Objects[this.Objects.length] = obj;
 }
-//just so there is an update, change in game code
-Game.prototype.update = function(modifier){  }
+//by default calls all the objects update methods
+Game.prototype.update = function(modifier){ 
+	for(obj in this.Objects){
+		this.Objects[obj].update(modifier);
+	}
+}
 //handles the drawing of everything added to game
 Game.prototype.draw = function(){
 	for(obj in this.Objects){

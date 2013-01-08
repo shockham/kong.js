@@ -22,6 +22,13 @@ player.update = function (modifier){
         player.x += player.Speed * modifier;
     }
 
+    if(32 in keysDown){
+        var bullet = new Entity(player.x + player.Width, player.y + player.Height/2, "img/bullet.png", 6, 2);
+        bullet.Speed = 512;
+        bullet.update = function (modifier){ bullet.x += bullet.Speed * modifier; };
+        game.add(bullet);
+    }
+
     // Are they touching?
     if (game.touching(player, npc)) {
         //kill player
@@ -29,7 +36,9 @@ player.update = function (modifier){
 };
 game.add(player);
 //sample npc
-var npc = new Entity(32 + (Math.random() * (game.canvas.width - 64)), 32 + (Math.random() * (game.canvas.height - 64)), "img/monster.png", 64, 64);
+var npc = new Entity(game.canvas.width - 64, 0, "img/monster.png", 64, 64);
+npc.Speed = 256;
+npc.Released = false;
 npc.update = function (modifier){
     if (38 in keysDown) { // Player holding up
         npc.y -= npc.Speed * modifier;
@@ -37,11 +46,18 @@ npc.update = function (modifier){
     if (40 in keysDown) { // Player holding down
         npc.y += npc.Speed * modifier;
     }
+
     if (37 in keysDown) { // Player holding left
+        npc.Released = true;
+    }
+
+    if(npc.Released){
         npc.x -= npc.Speed * modifier;
     }
-    if (39 in keysDown) { // Player holding right
-        npc.x += npc.Speed * modifier;
+
+    if(npc.x < -npc.Width){
+        npc.x = game.canvas.width - 64;
+        npc.Released = false;
     }
 
     // Are they touching?
@@ -52,10 +68,10 @@ npc.update = function (modifier){
 game.add(npc);
 
 // Update game objects
-game.update = function (modifier) {
-    player.update(modifier);
-    npc.update(modifier);
-};
+// game.update = function (modifier) {
+//     player.update(modifier);
+//     npc.update(modifier);
+// };
 
 var then = Date.now();//so game knows when it og started
 setInterval(function(){ game.main();}, 1); //calls main as fast as it can
