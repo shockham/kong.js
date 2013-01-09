@@ -5,7 +5,9 @@ var Entity = function(x, y, img, width, height){
 	this.y = y;
 	this.Width = width;
 	this.Height = height;
-	this.Speed = 256;
+	this.Speed = 256; //how fast the entity travels
+	this.Type = ""; //for determing what the entity is
+	this.Alive = true;
 	this.Img = new Image();
 	this.Img.onload = function(){ this.Ready = true; }
 	this.Img.src = img;
@@ -38,13 +40,15 @@ Game.prototype.add = function(obj){
 //by default calls all the objects update methods
 Game.prototype.update = function(modifier){ 
 	for(obj in this.Objects){
-		this.Objects[obj].update(modifier);
+		if(this.Objects[obj].Alive)
+			this.Objects[obj].update(modifier);
 	}
 }
 //handles the drawing of everything added to game
 Game.prototype.draw = function(){
 	for(obj in this.Objects){
-		this.Objects[obj].draw(this.ctx);
+		if(this.Objects[obj].Alive)
+			this.Objects[obj].draw(this.ctx);
 	}
 }
 //called as fast as can handles updates
