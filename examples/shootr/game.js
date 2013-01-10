@@ -28,7 +28,13 @@ player.update = function (modifier){
         var bullet = new Entity(player.x + player.Width, player.y + player.Height/2, "img/bullet.png", 6, 2);
         bullet.Speed = 512;
         bullet.Type = "bullet";
-        bullet.update = function (modifier){ bullet.x += bullet.Speed * modifier; };
+        bullet.update = function (modifier){ 
+            bullet.x += bullet.Speed * modifier; 
+            if(bullet.x > window.innerWidth){
+                game.remove(bullet);
+            }
+
+        };
         game.add(bullet);
     }
 
@@ -72,8 +78,8 @@ npcLauncher.update = function(modifier){
                 for(obj in game.Objects){
                     if (game.Objects[obj].Alive && game.Objects[obj].Type == "bullet" && game.touching(npc, game.Objects[obj])) {
                         //kill npc
-                        npc.Alive = false;
-                        game.Objects[obj].Alive = false;
+                        game.remove(npc);
+                        game.remove(game.Objects[obj]);
                     }
                 }
             };
@@ -82,7 +88,6 @@ npcLauncher.update = function(modifier){
 };
 game.add(npcLauncher);
 
-
-
+//starting the game loop
 var then = Date.now();//so game knows when it og started
 setInterval(function(){ game.main();}, 1); //calls main as fast as it can

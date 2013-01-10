@@ -37,6 +37,10 @@ var Game = function(){
 Game.prototype.add = function(obj){
 	this.Objects[this.Objects.length] = obj;
 }
+//function to remove items from game
+Game.prototype.remove = function(obj){
+	this.Objects.splice(this.Objects.indexOf(obj),1);
+}
 //by default calls all the objects update methods
 Game.prototype.update = function(modifier){ 
 	for(obj in this.Objects){
