@@ -47,7 +47,7 @@ player.update = function (modifier){
 };
 game.add(player);
 
-
+//the entity to launch all the other enemies from
 var npcLauncher = new Entity(game.canvas.width - 64, 0, "img/monster.png", 64, 64);
 npcLauncher.Speed = 256;
 npcLauncher.Type = "npcLauncher";
