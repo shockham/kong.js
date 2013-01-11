@@ -8,8 +8,9 @@ game.add(bg);
 
 //player
 var player = new Entity(0, 0, "img/player.png", 64, 64);
-player.Speed = 256;
+player.Speed = 400;
 player.Type = "player";
+player.Reloaded = true;
 player.update = function (modifier){
     if (87 in keysDown) { // Player holding up
         player.y -= player.Speed * modifier;
@@ -24,7 +25,7 @@ player.update = function (modifier){
         player.x += player.Speed * modifier;
     }
 
-    if(32 in keysDown){
+    if(32 in keysDown && player.Reloaded){
         var bullet = new Entity(player.x + player.Width, player.y + player.Height/2, "img/bullet.png", 6, 2);
         bullet.Speed = 512;
         bullet.Type = "bullet";
@@ -33,9 +34,10 @@ player.update = function (modifier){
             if(bullet.x > window.innerWidth){
                 game.remove(bullet);
             }
-
         };
         game.add(bullet);
+        player.Reloaded = false;
+        setTimeout(function(){player.Reloaded = true;}, 250);
     }
 
     for(obj in game.Objects){
@@ -49,44 +51,51 @@ game.add(player);
 
 //the entity to launch all the other enemies from
 var npcLauncher = new Entity(game.canvas.width - 64, 0, "img/monster.png", 64, 64);
-npcLauncher.Speed = 256;
+npcLauncher.Speed = 400;
 npcLauncher.Type = "npcLauncher";
+npcLauncher.Reloaded = true;
 npcLauncher.update = function(modifier){
     if (38 in keysDown) { // Player holding up
-            npcLauncher.y -= npcLauncher.Speed * modifier;
-        }
-        if (40 in keysDown) { // Player holding down
-            npcLauncher.y += npcLauncher.Speed * modifier;
-        }
+        npcLauncher.y -= npcLauncher.Speed * modifier;
+    }
+    if (40 in keysDown) { // Player holding down
+        npcLauncher.y += npcLauncher.Speed * modifier;
+    }
 
-        if (37 in keysDown) { // Player holding left
-            //sample npc
-            var npc = new Entity(game.canvas.width - 64, 0, "img/monster.png", 64, 64);
-            npc.Speed = 256;
-            npc.Type = "npc";
-            npc.x = npcLauncher.x;
-            npc.y = npcLauncher.y;
-            npc.update = function (modifier){
-                npc.x -= npc.Speed * modifier;
-                npc.y += Math.sin(npc.x/100);
+    if (37 in keysDown && npcLauncher.Reloaded) { // Player holding left
+        //sample npc
+        var npc = new Entity(game.canvas.width - 64, 0, "img/monster.png", 64, 64);
+        npc.Speed = 256;
+        npc.Type = "npc";
+        npc.x = npcLauncher.x;
+        npc.y = npcLauncher.y;
+        npc.update = function (modifier){
+            npc.x -= npc.Speed * modifier;
+            npc.y += Math.sin(npc.x/100);
 
-                if(npc.x < -npc.Width){
-                    npc.x = game.canvas.width - 64;
+            if(npc.x < -npc.Width){
+                npc.x = game.canvas.width - 64;
+            }
+
+            // Are they touching?
+            for(obj in game.Objects){
+                if (game.Objects[obj].Alive && game.Objects[obj].Type == "bullet" && game.touching(npc, game.Objects[obj])) {
+                    //kill npc
+                    game.remove(npc);
+                    game.remove(game.Objects[obj]);
                 }
-
-                // Are they touching?
-                for(obj in game.Objects){
-                    if (game.Objects[obj].Alive && game.Objects[obj].Type == "bullet" && game.touching(npc, game.Objects[obj])) {
-                        //kill npc
-                        game.remove(npc);
-                        game.remove(game.Objects[obj]);
-                    }
-                }
-            };
-            game.add(npc);
-        }
+            }
+        };
+        game.add(npc);
+        npcLauncher.Reloaded = false;
+        setTimeout(function(){npcLauncher.Reloaded = true;}, 250);
+    }
 };
 game.add(npcLauncher);
+
+//add the bgm
+var music = new Music("snd/8bitDnB_Loop.mp3");
+music.loop(48065);
 
 //starting the game loop
 var then = Date.now();//so game knows when it og started

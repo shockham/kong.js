@@ -76,6 +76,25 @@ Game.prototype.touching = function (a, b){
     	return false;
     }
 }
+//--music--
+//constructor
+var Music = function(file){
+    this.music = document.createElement("audio");
+    this.music.src = file;
+    this.music2 = document.createElement("audio");
+    this.music2.src = file;
+}
+//start a single playthrough
+Music.prototype.play = function(){
+	this.music.play();
+}
+//start the looping
+Music.prototype.loop = function(length){
+	var m = this;
+	setInterval(function(){m.music.play();}, length);
+    this.music.play();
+	setInterval(function(){m.music2.play();}, length);
+}
 
 // Handle keyboard controls
 var keysDown = {};
