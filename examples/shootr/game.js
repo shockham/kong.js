@@ -112,8 +112,8 @@ npcLauncher.update = function(modifier){
 playState.add(npcLauncher);
 
 //add the bgm
-//var music = new Music("snd/8bitDnB_Loop.mp3");
-//music.loop(48065);
+var music = new Music("snd/8bitDnB_Loop.mp3");
+music.loop(48065);
 
 //starting the playState loop
 var then = Date.now();//so playState knows when it og started
