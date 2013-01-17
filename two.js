@@ -19,41 +19,56 @@ Entity.prototype.draw = function(ctx){
 	if(this.Img.Ready)
 		ctx.drawImage(this.Img, this.x, this.y, this.Width, this.Height);
 }
-//--Game--
-//contructor
-var Game = function(){
-	//init canvas
-	this.canvas = document.createElement("canvas");
-	this.ctx = this.canvas.getContext("2d");
-	this.canvas.width = window.innerWidth - 5;
-	this.canvas.height = window.innerHeight - 5;
-	document.body.appendChild(this.canvas);	
+//--state--
+//constructor
+var State = function(){
 	this.Objects = new Array();
-	//text formatting stuff
-	this.ctx.font = '40px Monofett';
-    this.ctx.textBaseline = 'top';
 }
 //function to add items to game
-Game.prototype.add = function(obj){
+State.prototype.add = function(obj){
 	this.Objects[this.Objects.length] = obj;
 }
 //function to remove items from game
-Game.prototype.remove = function(obj){
+State.prototype.remove = function(obj){
 	this.Objects.splice(this.Objects.indexOf(obj),1);
 }
 //by default calls all the objects update methods
-Game.prototype.update = function(modifier){ 
+State.prototype.update = function(modifier){ 
 	for(obj in this.Objects){
 		if(this.Objects[obj].Alive)
 			this.Objects[obj].update(modifier);
 	}
 }
 //handles the drawing of everything added to game
-Game.prototype.draw = function(){
+State.prototype.draw = function(){
 	for(obj in this.Objects){
 		if(this.Objects[obj].Alive)
-			this.Objects[obj].draw(this.ctx);
+			this.Objects[obj].draw(document.getElementById("game_canvas").getContext("2d"));
 	}
+}
+//--Game--
+//contructor
+var Game = function(){
+	//init canvas
+	this.canvas = document.createElement("canvas");
+	this.canvas.id = "game_canvas";
+	this.ctx = this.canvas.getContext("2d");
+	this.canvas.width = window.innerWidth - 5;
+	this.canvas.height = window.innerHeight - 5;
+	document.body.appendChild(this.canvas);	
+	this.State = new State();
+	//text formatting stuff
+	this.ctx.font = '40px Monofett';
+    this.ctx.textBaseline = 'top';
+}
+
+//by default calls all the objects update methods
+Game.prototype.update = function(modifier){ 
+	this.State.update(modifier);
+}
+//handles the drawing of everything added to game
+Game.prototype.draw = function(){
+	this.State.draw();
 }
 //called as fast as can handles updates
 Game.prototype.main = function () {
@@ -91,8 +106,8 @@ Music.prototype.play = function(){
 //start the looping
 Music.prototype.loop = function(length){
 	var m = this;
-	setInterval(function(){m.music.play();}, length);
     this.music.play();
+    setInterval(function(){m.music.play();}, length);
 	setInterval(function(){m.music2.play();}, length);
 }
 
