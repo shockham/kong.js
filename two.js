@@ -48,13 +48,15 @@ State.prototype.draw = function(){
 }
 //--Game--
 //contructor
-var Game = function(){
+var Game = function(resx, resy, sizex, sizey){
 	//init canvas
 	this.canvas = document.createElement("canvas");
 	this.canvas.id = "game_canvas";
 	this.ctx = this.canvas.getContext("2d");
-	this.canvas.width = window.innerWidth - 5;
-	this.canvas.height = window.innerHeight - 5;
+	this.canvas.width = resx;
+	this.canvas.height = resy;
+	this.canvas.style.width = sizex + "px";
+	this.canvas.style.height = sizey + "px";
 	document.body.appendChild(this.canvas);	
 	this.State = new State();
 	//text formatting stuff
