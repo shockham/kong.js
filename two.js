@@ -19,6 +19,24 @@ Entity.prototype.draw = function(ctx){
 	if(this.Img.Ready)
 		ctx.drawImage(this.Img, this.x, this.y, this.Width, this.Height);
 }
+//--Textity--
+//constructor
+var Textity = function(x, y, txt, colour, size){
+	this.x = x;
+	this.y = y;
+	this.Text = txt;
+	this.Colour = colour;
+	this.Size = size;
+	this.Alive = true;
+}
+//Empty update functino
+Textity.prototype.update = function(modifier){}
+//draw function
+Textity.prototype.draw = function(ctx){
+	ctx.font= this.Size + "px 'VT323'";
+	ctx.fillStyle = this.Colour;
+	ctx.fillText(this.Text, this.x, this.y);
+}
 //--state--
 //constructor
 var State = function(){
