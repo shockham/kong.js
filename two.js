@@ -37,6 +37,23 @@ Textity.prototype.draw = function(ctx){
 	ctx.fillStyle = this.Colour;
 	ctx.fillText(this.Text, this.x, this.y);
 }
+//--Rectity--
+//constructor
+var Rectity = function(x, y, colour, width, height){
+	this.x = x;
+	this.y = y;
+	this.Width = width;
+	this.Height = height;
+	this.Colour = colour;
+	this.Alive = true;
+}
+//Empty update
+Rectity.prototype.update = function(modifier){}
+//draw function
+Rectity.prototype.draw = function(ctx){
+	ctx.fillStyle = this.Colour;
+  	ctx.fillRect(this.x, this.y, this.Width, this.Height);
+}
 //--state--
 //constructor
 var State = function(){
@@ -97,6 +114,13 @@ Game.prototype.main = function () {
     this.draw();
     this.update(delta / 1000);
     then = now;
+}
+//called to start the game
+var then = Date.now();
+Game.prototype.start = function(){
+	//starting the playState loop
+	then = Date.now();//so playState knows when it og started
+	setInterval(function(){game.main();}, 1); //calls main as fast as it can
 }
 //function to test if two objects are touching
 Game.prototype.touching = function (a, b){
