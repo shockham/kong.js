@@ -11,13 +11,18 @@ var Entity = function(x, y, img, width, height){
 	this.Img = new Image();
 	this.Img.onload = function(){ this.Ready = true; }
 	this.Img.src = img;
+	this.Rotation = 0;
 }
 //Empty update function to start with
 Entity.prototype.update = function(modifier){}
 //drawing the entity to canvas
 Entity.prototype.draw = function(ctx){
+	ctx.save();
+	ctx.translate(this.x+this.Width/2, this.y+this.Height/2);
+	ctx.rotate(this.Rotation);
 	if(this.Img.Ready)
-		ctx.drawImage(this.Img, this.x, this.y, this.Width, this.Height);
+		ctx.drawImage(this.Img, -(this.Width/2), -(this.Height/2), this.Width, this.Height);
+	ctx.restore();
 }
 //--Textity--
 //constructor
