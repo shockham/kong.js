@@ -59,6 +59,30 @@ Rectity.prototype.draw = function(ctx){
 	ctx.fillStyle = this.Colour;
   	ctx.fillRect(this.x, this.y, this.Width, this.Height);
 }
+//--Linety-
+//constructor
+var Linity = function(x, y, endX, endY, width){
+	this.x = x;
+	this.y = y;
+	this.EndX = endX;
+	this.EndY = endY;
+	this.Width = width;
+	this.Colour = "#000000";
+	this.Alive = true;
+}
+//Empty update
+Linity.prototype.update = function(modifier){}
+//draw function
+Linity.prototype.draw = function(ctx){
+	ctx.save();
+	ctx.fillStyle = this.Colour;
+	ctx.beginPath();
+	ctx.moveTo(this.x, this.y);
+	ctx.lineTo(this.EndX, this.EndY);
+	ctx.lineWidth = this.Width;
+	ctx.stroke();
+	ctx.restore();
+}
 //--state--
 //constructor
 var State = function(){
@@ -125,7 +149,8 @@ var then = Date.now();
 Game.prototype.start = function(){
 	//starting the playState loop
 	then = Date.now();//so playState knows when it og started
-	setInterval(function(){game.main();}, 1); //calls main as fast as it can
+	//setInterval(function(){game.main();}, 1); //calls main as fast as it can
+	requestAnimationFrame(game.main);
 }
 //function to test if two objects are touching
 Game.prototype.touching = function (a, b){
