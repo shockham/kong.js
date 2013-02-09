@@ -136,21 +136,23 @@ Game.prototype.update = function(modifier){
 Game.prototype.draw = function(){
 	this.State.draw();
 }
+var _g_; //game reference
 //called as fast as can handles updates
-Game.prototype.main = function () {
+Game.prototype.main = function (g) {
     var now = Date.now();
     var delta = now - then;
     this.draw();
     this.update(delta / 1000);
     then = now;
+    if (g) _g_ = g;
+    requestAnimationFrame(function(){_g_.main();});
 }
 //called to start the game
 var then = Date.now();
 Game.prototype.start = function(){
 	//starting the playState loop
 	then = Date.now();//so playState knows when it og started
-	//setInterval(function(){game.main();}, 1); //calls main as fast as it can
-	requestAnimationFrame(game.main);
+	this.main(this);
 }
 //function to test if two objects are touching
 Game.prototype.touching = function (a, b){

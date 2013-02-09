@@ -1,5 +1,5 @@
 //init the game
-var game = new Game(480, 240, 480, 240);
+var game = new Game(960, 480, 960, 480);
 
 var menuState = new State();
 game.State = menuState;
@@ -21,7 +21,6 @@ menuState.add(pressX);
 
 //init the playState
 var playState = new State();
-console.log("--newgame--------------")
 
 //adding objects
 //bg
@@ -114,11 +113,14 @@ npcLauncher.update = function(modifier){
     if (37 in keysDown && npcLauncher.Reloaded) { // Player holding left
         //sample npc
         var npc = new Entity(game.canvas.width - 24, 0, "img/enemy.png", 24, 24);
-        npc.Speed = 64;
+        npc.Speed = 128;
         npc.Type = "npc";
         npc.x = npcLauncher.x;
         npc.y = npcLauncher.y;
-        npc.interval = setInterval(function(){
+        npc.rate = 100 + Math.random() * 1000;
+        npc.reloaded = true;
+        npc.fire = function(){
+            npc.reloaded = false;
             var bullet = new Entity(npc.x, npc.y + npc.Height/2, "img/enemy_bullet.png", 6, 2);
             bullet.Speed = 512;
             bullet.Type = "enemy_bullet";
@@ -129,23 +131,19 @@ npcLauncher.update = function(modifier){
                 }
             };
             playState.add(bullet);
-        }, 100 + Math.random() * 100);
-        console.log(npc.interval);
+            setTimeout(function(){ npc.reloaded = true; }, npc.rate)
+        };
         npc.update = function (modifier){
             npc.x -= npc.Speed * modifier;
-            npc.y += Math.sin(npc.x/25);
+            npc.y += Math.sin(npc.x/50);
 
             if(npc.x < -npc.Width){
-                console.log("removed:" + npc.interval);
-                clearInterval(npc.interval);
                 playState.remove(npc);
             }
 
             // Are they touching?
             for(obj in playState.Objects){
                 if (playState.Objects[obj].Alive && playState.Objects[obj].Type == "bullet" && game.touching(npc, playState.Objects[obj])) {
-                    console.log("removed:" + npc.interval);
-                    clearInterval(npc.interval);
                     //kill npc
                     playState.remove(npc);
                     playState.remove(playState.Objects[obj]);
@@ -155,6 +153,7 @@ npcLauncher.update = function(modifier){
                     txtTwo.Text = twoTime;
                 }
             }
+            if(npc.reloaded) npc.fire();
         };
         playState.add(npc);
         npcLauncher.Reloaded = false;
@@ -175,9 +174,8 @@ playState.add(txtOne);
 playState.add(txtTwo);
 
 //add the bgm
-var music = new Music("snd/8bitDnB_Loop.mp3");
-music.loop(48065);
+// var music = new Music("snd/8bitDnB_Loop.mp3");
+// music.loop(48065);
 
 //starting the playState loop
-var then = Date.now();//so playState knows when it og started
-setInterval(function(){ game.main();}, 1); //calls main as fast as it can
+game.start();
