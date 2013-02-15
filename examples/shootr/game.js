@@ -27,6 +27,19 @@ var playState = new State();
 var bg = new Entity(0, 0, "img/bg.png", game.canvas.width, game.canvas.height);
 playState.add(bg);
 
+var stars = new Entity(0, 0, "img/stars.png", game.canvas.width*2, game.canvas.height);
+stars.update = function(modifier){
+    stars.x -= 100*modifier;
+    if(stars.x < -stars.Width) stars.x = (stars.Width/2);
+};
+var stars_ol = new Entity(stars.Width, 0, "img/stars.png", game.canvas.width*2, game.canvas.height);
+stars_ol.update = function(modifier){
+    stars_ol.x -= 100*modifier;
+    if(stars_ol.x < -stars_ol.Width) stars_ol.x = (stars_ol.Width/2);
+};
+playState.add(stars);
+playState.add(stars_ol);
+
 var oneTime = 30;
 var txtOne = new Textity(10, 0, oneTime, "#FFA500", 20);
 var twoTime = 30;
@@ -59,7 +72,7 @@ player.update = function (modifier){
 
     if(32 in keysDown && player.Reloaded){
         var bullet = new Entity(player.x + player.Width, player.y + player.Height/2, "img/bullet.png", 6, 2);
-        bullet.Speed = 512;
+        bullet.Speed = 600;
         bullet.Type = "bullet";
         bullet.update = function (modifier){ 
             bullet.x += bullet.Speed * modifier; 
@@ -69,7 +82,7 @@ player.update = function (modifier){
         };
         playState.add(bullet);
         player.Reloaded = false;
-        setTimeout(function(){player.Reloaded = true;}, 150);
+        setTimeout(function(){player.Reloaded = true;}, 100);
     }
 
     for(obj in playState.Objects){
@@ -113,16 +126,17 @@ npcLauncher.update = function(modifier){
     if (37 in keysDown && npcLauncher.Reloaded) { // Player holding left
         //sample npc
         var npc = new Entity(game.canvas.width - 24, 0, "img/enemy.png", 24, 24);
-        npc.Speed = 128;
+        npc.Speed = 400;
         npc.Type = "npc";
         npc.x = npcLauncher.x;
         npc.y = npcLauncher.y;
         npc.rate = 100 + Math.random() * 1000;
+        npc.pattern = ~~(Math.random()*5);
         npc.reloaded = true;
         npc.fire = function(){
             npc.reloaded = false;
             var bullet = new Entity(npc.x, npc.y + npc.Height/2, "img/enemy_bullet.png", 6, 2);
-            bullet.Speed = 512;
+            bullet.Speed = 600;
             bullet.Type = "enemy_bullet";
             bullet.update = function (modifier){ 
                 bullet.x -= bullet.Speed * modifier; 
@@ -134,10 +148,32 @@ npcLauncher.update = function(modifier){
             setTimeout(function(){ npc.reloaded = true; }, npc.rate)
         };
         npc.update = function (modifier){
-            npc.x -= npc.Speed * modifier;
-            npc.y += Math.sin(npc.x/50);
+            switch(npc.pattern){
+                case 1:
+                    if(npc.x < game.canvas.width/3 && !npc.going_back) npc.going_back = true;
+                    if(npc.going_back) npc.x += (npc.Speed * modifier);
+                    else npc.x -= (npc.Speed * modifier);
+                    npc.y += Math.sin(npc.x/50);
+                    break;
+                case 2:
+                    npc.x -= npc.Speed * modifier;
+                    npc.y -= 3;
+                    break;
+                case 3:
+                    npc.x -= npc.Speed * modifier;
+                    npc.y += Math.tan(npc.x/50);
+                    break;
+                case 4:
+                    npc.x -= npc.Speed * modifier;
+                    npc.y += 3;
+                    break;
+                default:
+                    npc.x -= npc.Speed * modifier;
+                    npc.y += Math.sin(npc.x/50);
+                    break;
+            }
 
-            if(npc.x < -npc.Width){
+            if(npc.x < -npc.Width || npc.x > (game.canvas.width + npc.Width)){
                 playState.remove(npc);
             }
 
@@ -157,7 +193,7 @@ npcLauncher.update = function(modifier){
         };
         playState.add(npc);
         npcLauncher.Reloaded = false;
-        setTimeout(function(){npcLauncher.Reloaded = true;}, 250);
+        setTimeout(function(){npcLauncher.Reloaded = true;}, 150);
     }
     if(twoTime <= 0){
         var twoLose = new Textity(0, 0, "Player One wins", "#FFA500", 50);
