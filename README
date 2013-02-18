@@ -1,11 +1,13 @@
 two.js
------------------------
+========
 
 two.js is a small js library for creating simple 2d canvas games.
 
--------------------------------------------------------------------------------------
+----
 
-License
+### License ###
+
+####The MIT License####
 
 Copyright (C) 2013 Samuel W. Hockham
 
