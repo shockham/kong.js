@@ -210,8 +210,8 @@ playState.add(txtOne);
 playState.add(txtTwo);
 
 //add the bgm
-// var music = new Music("snd/8bitDnB_Loop.mp3");
-// music.loop(48065);
+var music = new Music("snd/8bitDnB_Loop.mp3");
+music.loop(48065);
 
 //starting the playState loop
 game.start();

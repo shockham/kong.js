@@ -145,7 +145,13 @@ Game.prototype.main = function (g) {
     this.update(delta / 1000);
     then = now;
     if (g) _g_ = g;
-    requestAnimationFrame(function(){_g_.main();});
+    if(mozRequestAnimationFrame !== undefined){
+    	mozRequestAnimationFrame(function(){_g_.main();});
+    }else if(requestAnimationFrame !== undefined){
+    	requestAnimationFrame(function(){_g_.main();});
+    }else{
+    	setInterval(function(){_g_.main();}, 1);
+    }
 }
 //called to start the game
 var then = Date.now();
