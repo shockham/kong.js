@@ -1,6 +1,6 @@
 //--Entity--
 //contructor
-var Entity = function(x, y, img, width, height){
+var Entity = function(x, y, img, width, height, layer){
 	this.x = x;
 	this.y = y;
 	this.Width = width;
@@ -12,6 +12,7 @@ var Entity = function(x, y, img, width, height){
 	this.Img.onload = function(){ this.Ready = true; }
 	this.Img.src = img;
 	this.Rotation = 0;
+	this.layer = layer || 0;
 }
 //Empty update function to start with
 Entity.prototype.update = function(modifier){}
@@ -26,15 +27,16 @@ Entity.prototype.draw = function(ctx){
 }
 //--Textity--
 //constructor
-var Textity = function(x, y, txt, colour, size){
+var Textity = function(x, y, txt, colour, size, layer){
 	this.x = x;
 	this.y = y;
 	this.Text = txt;
 	this.Colour = colour;
 	this.Size = size;
 	this.Alive = true;
+	this.layer = layer || 0;
 }
-//Empty update functino
+//Empty update function
 Textity.prototype.update = function(modifier){}
 //draw function
 Textity.prototype.draw = function(ctx){
@@ -44,13 +46,14 @@ Textity.prototype.draw = function(ctx){
 }
 //--Rectity--
 //constructor
-var Rectity = function(x, y, colour, width, height){
+var Rectity = function(x, y, colour, width, height, layer){
 	this.x = x;
 	this.y = y;
 	this.Width = width;
 	this.Height = height;
 	this.Colour = colour;
 	this.Alive = true;
+	this.layer = layer || 0;
 }
 //Empty update
 Rectity.prototype.update = function(modifier){}
@@ -61,7 +64,7 @@ Rectity.prototype.draw = function(ctx){
 }
 //--Linety-
 //constructor
-var Linity = function(x, y, endX, endY, width){
+var Linity = function(x, y, endX, endY, width, layer){
 	this.x = x;
 	this.y = y;
 	this.EndX = endX;
@@ -69,6 +72,7 @@ var Linity = function(x, y, endX, endY, width){
 	this.Width = width;
 	this.Colour = "#000000";
 	this.Alive = true;
+	this.layer = layer || 0;
 }
 //Empty update
 Linity.prototype.update = function(modifier){}
@@ -107,25 +111,35 @@ State.prototype.update = function(modifier){
 State.prototype.draw = function(){
 	for(obj in this.Objects){
 		if(this.Objects[obj].Alive)
-			this.Objects[obj].draw(document.getElementById("game_canvas").getContext("2d"));
+			this.Objects[obj].draw(document.getElementById("game_canvas_"+this.Objects[obj].layer).getContext("2d"));
 	}
 }
 //--Game--
 //contructor
 var Game = function(resx, resy, sizex, sizey){
-	//init canvas
-	this.canvas = document.createElement("canvas");
-	this.canvas.id = "game_canvas";
-	this.ctx = this.canvas.getContext("2d");
-	this.canvas.width = resx;
-	this.canvas.height = resy;
-	this.canvas.style.width = sizex + "px";
-	this.canvas.style.height = sizey + "px";
-	document.body.appendChild(this.canvas);	
+	//init canvases
+	this.width = resx;
+	this.height = resy;
+	for (var i = 0; i <= 3; i++) {
+		this.add_canvas(i, resx, resy, sizex, sizey);
+	};
 	this.State = new State();
+}
+//function to add canvases or layers
+Game.prototype.add_canvas = function(layer_no, resx, resy, sizex, sizey){
+	var cnv = document.createElement("canvas");
+	cnv.id = "game_canvas_"+layer_no;
+	cnv.width = resx;
+	cnv.height = resy;
+	cnv.style.width = sizex + "px";
+	cnv.style.height = sizey + "px";
+	cnv.style.position = 'absolute';
+	cnv.style.backgroundColor = 'transparent';
 	//text formatting stuff
-	this.ctx.font = '40px Monofett';
-    this.ctx.textBaseline = 'top';
+	var context = cnv.getContext("2d");
+	context.font = '40px Monofett';
+    context.textBaseline = 'top';
+	document.body.appendChild(cnv);	
 }
 
 //by default calls all the objects update methods
@@ -136,6 +150,17 @@ Game.prototype.update = function(modifier){
 Game.prototype.draw = function(){
 	this.State.draw();
 }
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          window.oRequestAnimationFrame      ||
+          window.msRequestAnimationFrame     ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
 var _g_; //game reference
 //called as fast as can handles updates
 Game.prototype.main = function (g) {
@@ -145,13 +170,7 @@ Game.prototype.main = function (g) {
     this.update(delta / 1000);
     then = now;
     if (g) _g_ = g;
-    if(mozRequestAnimationFrame !== undefined){
-    	mozRequestAnimationFrame(function(){_g_.main();});
-    }else if(requestAnimationFrame !== undefined){
-    	requestAnimationFrame(function(){_g_.main();});
-    }else{
-    	setInterval(function(){_g_.main();}, 1);
-    }
+    requestAnimFrame(function(){_g_.main();});
 }
 //called to start the game
 var then = Date.now();

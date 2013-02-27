@@ -10,13 +10,13 @@ menuState.update = function(modifier){
     }
 };
 
-var menuBg = new Entity(0, 0, "img/bg.png", game.canvas.width, game.canvas.height);
+var menuBg = new Entity(0, 0, "img/bg.png", game.width, game.height);
 menuState.add(menuBg);
 
 var title = new Textity(0,00, "twoduga", "#FFA500", 70);
 menuState.add(title);
 
-var pressX = new Textity(0, game.canvas.height - 20, "press space to start", "#FFA500", 20);
+var pressX = new Textity(0, game.height - 20, "press space to start", "#FFA500", 20);
 menuState.add(pressX);
 
 //init the playState
@@ -24,15 +24,15 @@ var playState = new State();
 
 //adding objects
 //bg
-var bg = new Entity(0, 0, "img/bg.png", game.canvas.width, game.canvas.height);
+var bg = new Entity(0, 0, "img/bg.png", game.width, game.height);
 playState.add(bg);
 
-var stars = new Entity(0, 0, "img/stars.png", game.canvas.width*2, game.canvas.height);
+var stars = new Entity(0, 0, "img/stars.png", game.width*2, game.height);
 stars.update = function(modifier){
     stars.x -= 100*modifier;
     if(stars.x < -stars.Width) stars.x = (stars.Width/2);
 };
-var stars_ol = new Entity(stars.Width, 0, "img/stars.png", game.canvas.width*2, game.canvas.height);
+var stars_ol = new Entity(stars.Width, 0, "img/stars.png", game.width*2, game.height);
 stars_ol.update = function(modifier){
     stars_ol.x -= 100*modifier;
     if(stars_ol.x < -stars_ol.Width) stars_ol.x = (stars_ol.Width/2);
@@ -43,7 +43,7 @@ playState.add(stars_ol);
 var oneTime = 30;
 var txtOne = new Textity(10, 0, oneTime, "#FFA500", 20);
 var twoTime = 30;
-var txtTwo = new Textity(game.canvas.width - 45, 0, twoTime, "#FFA500", 20);
+var txtTwo = new Textity(game.width - 45, 0, twoTime, "#FFA500", 20);
 var timer = setInterval(function(){
     oneTime -= 1;
     txtOne.Text = oneTime;
@@ -52,7 +52,7 @@ var timer = setInterval(function(){
  }, 1000);
 
 //player
-var player = new Entity(0, game.canvas.height/2, "img/ship.png", 24, 24);
+var player = new Entity(0, game.height/2, "img/ship.png", 24, 24);
 player.Speed = 400;
 player.Type = "player";
 player.Reloaded = true;
@@ -60,13 +60,13 @@ player.update = function (modifier){
     if (87 in keysDown && player.y > 0) { // Player holding up
         player.y -= player.Speed * modifier;
     }
-    if (83 in keysDown && player.y + player.Height < game.canvas.height ) { // Player holding down
+    if (83 in keysDown && player.y + player.Height < game.height ) { // Player holding down
         player.y += player.Speed * modifier;
     }
     if (65 in keysDown && player.x > 0) { // Player holding left
         player.x -= player.Speed * modifier;
     }
-    if (68 in keysDown && player.x + player.Width < game.canvas.width) { // Player holding right
+    if (68 in keysDown && player.x + player.Width < game.width) { // Player holding right
         player.x += player.Speed * modifier;
     }
 
@@ -111,7 +111,7 @@ player.update = function (modifier){
 playState.add(player);
 
 //the entity to launch all the other enemies from
-var npcLauncher = new Entity(game.canvas.width - 24, game.canvas.height/2, "img/enemy_launcher.png", 24, 24);
+var npcLauncher = new Entity(game.width - 24, game.height/2, "img/enemy_launcher.png", 24, 24);
 npcLauncher.Speed = 400;
 npcLauncher.Type = "npcLauncher";
 npcLauncher.Reloaded = true;
@@ -119,13 +119,13 @@ npcLauncher.update = function(modifier){
     if (38 in keysDown && npcLauncher.y > 0) { // Player holding up
         npcLauncher.y -= npcLauncher.Speed * modifier;
     }
-    if (40 in keysDown && npcLauncher.y + npcLauncher.Height < game.canvas.height) { // Player holding down
+    if (40 in keysDown && npcLauncher.y + npcLauncher.Height < game.height) { // Player holding down
         npcLauncher.y += npcLauncher.Speed * modifier;
     }
 
     if (37 in keysDown && npcLauncher.Reloaded) { // Player holding left
         //sample npc
-        var npc = new Entity(game.canvas.width - 24, 0, "img/enemy.png", 24, 24);
+        var npc = new Entity(game.width - 24, 0, "img/enemy.png", 24, 24);
         npc.Speed = 400;
         npc.Type = "npc";
         npc.x = npcLauncher.x;
@@ -150,7 +150,7 @@ npcLauncher.update = function(modifier){
         npc.update = function (modifier){
             switch(npc.pattern){
                 case 1:
-                    if(npc.x < game.canvas.width/3 && !npc.going_back) npc.going_back = true;
+                    if(npc.x < game.width/3 && !npc.going_back) npc.going_back = true;
                     if(npc.going_back) npc.x += (npc.Speed * modifier);
                     else npc.x -= (npc.Speed * modifier);
                     npc.y += Math.sin(npc.x/50);
@@ -173,7 +173,7 @@ npcLauncher.update = function(modifier){
                     break;
             }
 
-            if(npc.x < -npc.Width || npc.x > (game.canvas.width + npc.Width)){
+            if(npc.x < -npc.Width || npc.x > (game.width + npc.Width)){
                 playState.remove(npc);
             }
 
