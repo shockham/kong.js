@@ -10,13 +10,13 @@ menuState.update = function(modifier){
     }
 };
 
-var menuBg = new Entity(0, 0, "img/bg.png", game.width, game.height);
+var menuBg = new Entity(0, 0, "img/bg.png", game.width, game.height, 0);
 menuState.add(menuBg);
 
-var title = new Textity(0,00, "twoduga", "#FFA500", 70);
+var title = new Textity(0,00, "twoduga", "#FFA500", 70, 2);
 menuState.add(title);
 
-var pressX = new Textity(0, game.height - 20, "press space to start", "#FFA500", 20);
+var pressX = new Textity(0, game.height - 20, "press space to start", "#FFA500", 20, 2);
 menuState.add(pressX);
 
 //init the playState
@@ -24,15 +24,15 @@ var playState = new State();
 
 //adding objects
 //bg
-var bg = new Entity(0, 0, "img/bg.png", game.width, game.height);
+var bg = new Entity(0, 0, "img/bg.png", game.width, game.height, 0);
 playState.add(bg);
 
-var stars = new Entity(0, 0, "img/stars.png", game.width*2, game.height);
+var stars = new Entity(0, 0, "img/stars.png", game.width*2, game.height, 0);
 stars.update = function(modifier){
     stars.x -= 100*modifier;
     if(stars.x < -stars.Width) stars.x = (stars.Width/2);
 };
-var stars_ol = new Entity(stars.Width, 0, "img/stars.png", game.width*2, game.height);
+var stars_ol = new Entity(stars.Width, 0, "img/stars.png", game.width*2, game.height, 0);
 stars_ol.update = function(modifier){
     stars_ol.x -= 100*modifier;
     if(stars_ol.x < -stars_ol.Width) stars_ol.x = (stars_ol.Width/2);
@@ -41,9 +41,9 @@ playState.add(stars);
 playState.add(stars_ol);
 
 var oneTime = 30;
-var txtOne = new Textity(10, 0, oneTime, "#FFA500", 20);
+var txtOne = new Textity(10, 0, oneTime, "#FFA500", 20, 2);
 var twoTime = 30;
-var txtTwo = new Textity(game.width - 45, 0, twoTime, "#FFA500", 20);
+var txtTwo = new Textity(game.width - 45, 0, twoTime, "#FFA500", 20, 2);
 var timer = setInterval(function(){
     oneTime -= 1;
     txtOne.Text = oneTime;
@@ -52,7 +52,7 @@ var timer = setInterval(function(){
  }, 1000);
 
 //player
-var player = new Entity(0, game.height/2, "img/ship.png", 24, 24);
+var player = new Entity(0, game.height/2, "img/ship.png", 24, 24, 1);
 player.Speed = 400;
 player.Type = "player";
 player.Reloaded = true;
@@ -71,7 +71,7 @@ player.update = function (modifier){
     }
 
     if(32 in keysDown && player.Reloaded){
-        var bullet = new Entity(player.x + player.Width, player.y + player.Height/2, "img/bullet.png", 6, 2);
+        var bullet = new Entity(player.x + player.Width, player.y + player.Height/2, "img/bullet.png", 6, 2, 1);
         bullet.Speed = 600;
         bullet.Type = "bullet";
         bullet.update = function (modifier){ 
@@ -100,7 +100,7 @@ player.update = function (modifier){
         }
     }
     if(oneTime <= 0){
-        var oneLose = new Textity(0, 0, "Player Two wins", "#FFA500", 50);
+        var oneLose = new Textity(0, 0, "Player Two wins", "#FFA500", 50, 2);
         playState.add(oneLose);
         playState.remove(player);
         playState.remove(txtOne);
@@ -111,7 +111,7 @@ player.update = function (modifier){
 playState.add(player);
 
 //the entity to launch all the other enemies from
-var npcLauncher = new Entity(game.width - 24, game.height/2, "img/enemy_launcher.png", 24, 24);
+var npcLauncher = new Entity(game.width - 24, game.height/2, "img/enemy_launcher.png", 24, 24, 1);
 npcLauncher.Speed = 400;
 npcLauncher.Type = "npcLauncher";
 npcLauncher.Reloaded = true;
@@ -125,7 +125,7 @@ npcLauncher.update = function(modifier){
 
     if (37 in keysDown && npcLauncher.Reloaded) { // Player holding left
         //sample npc
-        var npc = new Entity(game.width - 24, 0, "img/enemy.png", 24, 24);
+        var npc = new Entity(game.width - 24, 0, "img/enemy.png", 24, 24, 1);
         npc.Speed = 400;
         npc.Type = "npc";
         npc.x = npcLauncher.x;
@@ -135,7 +135,7 @@ npcLauncher.update = function(modifier){
         npc.reloaded = true;
         npc.fire = function(){
             npc.reloaded = false;
-            var bullet = new Entity(npc.x, npc.y + npc.Height/2, "img/enemy_bullet.png", 6, 2);
+            var bullet = new Entity(npc.x, npc.y + npc.Height/2, "img/enemy_bullet.png", 6, 2, 1);
             bullet.Speed = 600;
             bullet.Type = "enemy_bullet";
             bullet.update = function (modifier){ 
@@ -196,7 +196,7 @@ npcLauncher.update = function(modifier){
         setTimeout(function(){npcLauncher.Reloaded = true;}, 150);
     }
     if(twoTime <= 0){
-        var twoLose = new Textity(0, 0, "Player One wins", "#FFA500", 50);
+        var twoLose = new Textity(0, 0, "Player One wins", "#FFA500", 50, 2);
         playState.add(twoLose);
         playState.remove(npcLauncher);
         playState.remove(txtOne);

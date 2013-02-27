@@ -109,9 +109,14 @@ State.prototype.update = function(modifier){
 }
 //handles the drawing of everything added to game
 State.prototype.draw = function(){
+	var ctx = [];
+	for(var i=0;i<=2;i++){
+		ctx.push(document.getElementById("game_canvas_"+i).getContext("2d"));
+		ctx[i].clearRect(0,0, ctx[i].canvas.width, ctx[i].canvas.height);
+	}
 	for(obj in this.Objects){
 		if(this.Objects[obj].Alive)
-			this.Objects[obj].draw(document.getElementById("game_canvas_"+this.Objects[obj].layer).getContext("2d"));
+			this.Objects[obj].draw(ctx[this.Objects[obj].layer]);
 	}
 }
 //--Game--
@@ -120,7 +125,7 @@ var Game = function(resx, resy, sizex, sizey){
 	//init canvases
 	this.width = resx;
 	this.height = resy;
-	for (var i = 0; i <= 3; i++) {
+	for (var i = 0; i <= 2; i++) {
 		this.add_canvas(i, resx, resy, sizex, sizey);
 	};
 	this.State = new State();
