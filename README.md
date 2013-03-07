@@ -1,7 +1,7 @@
-two.js
+kong.js
 ========
 
-two.js is a small js library for creating simple 2d canvas games.
+kong.js is a small js library for creating simple 2d canvas games.
 
 ----
 
