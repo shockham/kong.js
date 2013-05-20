@@ -14,7 +14,7 @@ menuState.update = function(modifier){
 var menuBg = new Entity(0, 0, "img/bg.png", game.width, game.height, 0);
 menuState.add(menuBg);
 
-var title = new Textity(0,00, "twoduga", "#FFA500", 70, 2);
+var title = new Textity(0,00, "template", "#FFA500", 70, 2);
 menuState.add(title);
 
 var pressX = new Textity(0, game.height - 20, "press space to start", "#FFA500", 20, 2);
@@ -41,7 +41,7 @@ player.update = function (modifier){
     if (68 in keysDown && player.x + player.Width < game.width) { // Player holding right
         player.x += player.Speed * modifier;
     }
-}
+};
 playState.add(player);
 
 //starting the playState loop

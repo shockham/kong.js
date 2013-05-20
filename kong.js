@@ -186,12 +186,30 @@ Game.prototype.start = function(){
 };
 //function to test if two objects are touching
 Game.prototype.touching = function (a, b){
-	if (
-        a.x <= (b.x + b.Width) && b.x <= (a.x + a.Width) && a.y <= (b.y + b.Height) && b.y <= (a.y + a.Height)
-    ) {
+	if(a.x <= (b.x + b.Width) && b.x <= (a.x + a.Width) && a.y <= (b.y + b.Height) && b.y <= (a.y + a.Height))
         return true;
-    }else{
-        return false;
+    else return false;
+};
+//collisions
+Game.prototype.collide = function(a, b){
+    if(a.x <= (b.x + b.Width) && b.x <= (a.x + a.Width) && a.y <= (b.y + b.Height) && b.y <= (a.y + a.Height)){
+        var x_l = (b.x + b.Width) - a.x;
+        var x_r = (a.x + a.Width) - b.x;
+        var y_u = (b.y + b.Height) - a.y;
+        var y_d = (a.y + a.Height) - b.y;
+        if((x_l||x_r)>(y_u||y_d)){
+            if(x_l < x_r){
+                a.x = b.x + b.Width;
+            }else{
+                a.x = b.x - b.Width;
+            }
+        }else{
+            if(y_u < y_d){
+                a.y = b.y + b.Height;
+            }else{
+                a.y = b.y - b.Height;
+            }
+        }
     }
 };
 //--music--
@@ -199,28 +217,24 @@ Game.prototype.touching = function (a, b){
 var Music = function(file){
     this.music = document.createElement("audio");
     this.music.src = file;
-    this.music2 = document.createElement("audio");
-    this.music2.src = file;
 };
 //start a single playthrough
 Music.prototype.play = function(){
 	this.music.play();
 };
 //start the looping
-Music.prototype.loop = function(length){
-	var m = this;
+Music.prototype.loop = function(){
+    this.music.loop = true;
     this.music.play();
-    setInterval(function(){m.music.play();}, length);
-	setInterval(function(){m.music2.play();}, length);
 };
 
 // Handle keyboard controls
 var keysDown = {};
 
-addEventListener("keydown", function (e) {
+addEventListener("keydown", function(e){
     keysDown[e.keyCode] = true;
 }, false);
 
-addEventListener("keyup", function (e) {
+addEventListener("keyup", function(e){
     delete keysDown[e.keyCode];
 }, false);
