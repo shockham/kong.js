@@ -238,3 +238,16 @@ addEventListener("keydown", function(e){
 addEventListener("keyup", function(e){
     delete keysDown[e.keyCode];
 }, false);
+
+// Handle touches
+var touches = [];
+
+addEventListener("touchstart", function(e){
+    e.preventDefault();
+    touches = e.touches;
+}, false);
+
+addEventListener("touchend", function(e){
+    e.preventDefault();
+    touches = e.touches;
+}, false);
