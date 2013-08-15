@@ -251,3 +251,11 @@ addEventListener("touchend", function(e){
     e.preventDefault();
     touches = e.touches;
 }, false);
+
+addEventListener("mousedown", function(e){
+    touches[0] = e;
+}, false);
+
+addEventListener("mouseup", function(e){
+    touches[0] = null;
+}, false);
