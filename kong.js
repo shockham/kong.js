@@ -149,9 +149,13 @@ Game.prototype.add_canvas = function(layer_no, resx, resy, sizex, sizey){
     document.body.appendChild(cnv);
 };
 
+var has_focus = true;
+window.onfocus = function(){ has_focus = true; };
+window.onblur = function(){ has_focus = false; };
+
 //by default calls all the objects update methods
 Game.prototype.update = function(modifier){
-    this.State.update(modifier);
+    if(has_focus) this.State.update(modifier);
 };
 //handles the drawing of everything added to game
 Game.prototype.draw = function(){
